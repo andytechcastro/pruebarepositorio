@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    WORKINGDIR = "infrastructure/backend/rabbitmq"
+    WORKINGDIR = "./"
   }
   stages {
     stage('Configure Kubernetes Access') {
@@ -21,19 +21,19 @@ pipeline {
       steps{
         dir(WORKINGDIR) {
           sh """
-          helm upgrade rabbit chart/ --set persistence.enabled=false --debug --wait --install --namespace qa
+          helm upgrade andres demo/ --set persistence.enabled=false --debug --wait --install --namespace qa
           """
           script {
-            rc = sh(script: "helm test rabbit --logs --namespace qa", returnStatus: true)
+            rc = sh(script: "helm test andres --logs --namespace qa", returnStatus: true)
             if (rc != 0) {
               sh """
-              helm rollback rabbit 0 -n qa
+              helm rollback andres 0 -n qa
               exit 1
               """
             }
           }
           sh """
-           kubectl delete pod -n qa rabbit-rabbitmq-test
+           kubectl delete pod -n qa andres-andresmq-test
           """
         }
       }
@@ -48,19 +48,19 @@ pipeline {
       steps{
         dir(WORKINGDIR) {
           sh """
-          helm upgrade rabbit chart/ --set persistence.enabled=false --debug --wait --install --namespace prod
+          helm upgrade andres demo/ --set persistence.enabled=false --debug --wait --install --namespace prod
           """
           script {
-            rc = sh(script: "helm test rabbit --logs --namespace prod", returnStatus: true)
+            rc = sh(script: "helm test andres --logs --namespace prod", returnStatus: true)
             if (rc != 0) {
               sh """
-              helm rollback rabbit 0 -n prod
+              helm rollback andres 0 -n prod
               exit 1
               """
             }
           }
           sh """
-           kubectl delete pod -n prod rabbit-rabbitmq-test
+           kubectl delete pod -n prod andres-andresmq-test
           """
         }
       }
