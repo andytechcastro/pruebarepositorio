@@ -33,7 +33,7 @@ pipeline {
             }
           }
           sh """
-           kubectl delete pod -n qa andres
+           kubectl delete pod -n qa andres-demo-test-connection
           """
         }
       }
@@ -60,7 +60,7 @@ pipeline {
             }
           }
           sh """
-           kubectl delete pod -n prod andres
+           kubectl delete pod -n prod andres-demo-test-connection
           """
         }
       }
